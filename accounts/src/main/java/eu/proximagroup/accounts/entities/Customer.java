@@ -50,6 +50,7 @@ public class Customer extends BaseEntity {
 	@Pattern(regexp = "^(\\\\+|[0]{2})[0-9]{11,14}$", message = "mobile_number must have internationla prefix")
 	private String mobileNumber;
 	
+	//per bloccare il loop, questa nella @OneToMany
 	@JsonManagedReference
 	@OneToMany(mappedBy="customer")
 	private List<Account> accounts;

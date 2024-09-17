@@ -33,6 +33,7 @@ public class Account extends BaseEntity {
     @Column(name="branch_address")
     private String branchAddress;
     
+    //l'annotazione json references stoppa il loop della chiamata all'oggetto
     @ManyToOne
     @JsonBackReference
     @JoinColumn(nullable = false)
