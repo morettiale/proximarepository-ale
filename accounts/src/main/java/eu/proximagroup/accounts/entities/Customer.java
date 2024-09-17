@@ -10,6 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -54,4 +56,10 @@ public class Customer extends BaseEntity {
 	@JsonManagedReference
 	@OneToMany(mappedBy="customer")
 	private List<Account> accounts;
+	
+	@PrePersist @PreUpdate
+	public void preEmail() {
+		this.email=this.email.toLowerCase();
+	}
+	
 }
