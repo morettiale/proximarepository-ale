@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import eu.proximagroup.cards.exceptions.ResourceNotFoundException;
 import eu.proximagroup.cards.models.Card;
 import eu.proximagroup.cards.repositories.CardRepository;
 
@@ -20,5 +21,14 @@ public class CardService {
 		return this.cardRepository.findAll();
 	}
 	
+	public Card getById(Long id) {
+		Card card=this.cardRepository.findById(id)
+				.orElseThrow( () -> new ResourceNotFoundException("Card", "id", id.toString()));
+		return card;
+	}
+	
+	public Card store(Card card) {
+		return this.cardRepository.save(card);
+	}
 	
 }
