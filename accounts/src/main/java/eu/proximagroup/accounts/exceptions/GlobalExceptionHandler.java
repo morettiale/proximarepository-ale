@@ -8,7 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import eu.proximagroup.accounts.dto.ResponseErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 
-//quando andimao a sollevare un'eccezione custom, tramite questa annotazione andiamo a definire come gestirla
+//quando andiamo a sollevare un'eccezione custom, tramite questa annotazione andiamo a definire come gestirla
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 	

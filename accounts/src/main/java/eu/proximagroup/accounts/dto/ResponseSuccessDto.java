@@ -15,7 +15,6 @@ public class ResponseSuccessDto<T> {
 	private LocalDateTime time;
 	
 	public ResponseSuccessDto(HttpStatus code, String message, T data) {
-		super();
 		this.code = code;
 		this.message = message;
 		this.data = data;
