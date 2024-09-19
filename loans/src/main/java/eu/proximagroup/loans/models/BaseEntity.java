@@ -1,4 +1,4 @@
-package eu.proximagroup.models;
+package eu.proximagroup.loans.models;
 
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedBy;
