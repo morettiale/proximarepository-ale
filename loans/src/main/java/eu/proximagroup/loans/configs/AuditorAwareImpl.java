@@ -1,4 +1,4 @@
-package eu.proximagroup.configs;
+package eu.proximagroup.loans.configs;
 
 import java.util.Optional;
 
