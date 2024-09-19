@@ -1,4 +1,4 @@
-package eu.proximagroup.dtos;
+package eu.proximagroup.loans.dtos;
 
 import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
