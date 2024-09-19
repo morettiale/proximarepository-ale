@@ -22,8 +22,8 @@ public class CardService {
 	}
 	
 	public Card getById(Long id) {
-		Card card=this.cardRepository.findById(id)
-				.orElseThrow( () -> new ResourceNotFoundException("Card", "id", id.toString()));
+		isPresent(id);
+		Card card=this.cardRepository.findById(id).get();
 		return card;
 	}
 	
@@ -31,4 +31,18 @@ public class CardService {
 		return this.cardRepository.save(card);
 	}
 	
+	public Card update(Card card,Long id) {
+		card.setId(id);
+		return this.cardRepository.save(card);
+	}
+	
+	public void deleteById(Long id) {
+		isPresent(id);
+		this.cardRepository.deleteById(id);
+	}
+	
+	public void isPresent(Long id) {
+		this.cardRepository.findById(id)
+			.orElseThrow( () -> new ResourceNotFoundException("Card", "id", id.toString()));
+	}
 }
