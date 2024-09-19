@@ -4,8 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import eu.proximagroup.accounts.dto.ResponseErrorDto;
-import eu.proximagroup.accounts.exceptions.ResourceNotFoundException;
+import eu.proximagroup.cards.dtos.ResponseErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
