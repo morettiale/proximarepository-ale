@@ -3,8 +3,7 @@ package eu.proximagroup.loans.utilities;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import eu.proximagroup.accounts.constants.CustomerConstants;
-import eu.proximagroup.accounts.dto.ResponseErrorDto;
+import eu.proximagroup.loans.dtos.ResponseErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class GeneralTools {
@@ -16,7 +15,7 @@ public class GeneralTools {
             		request.getRequestURI(),
             		request.getMethod(),
             		HttpStatus.BAD_REQUEST,
-            		CustomerConstants.ERROR_ID_NUMERIC
+            		"AGGIUNGERE COSTANTE"
             	)	
             );
         }
