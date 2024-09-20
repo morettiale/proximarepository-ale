@@ -22,10 +22,20 @@ import eu.proximagroup.accounts.dto.ResponseErrorDto;
 import eu.proximagroup.accounts.dto.ResponseSuccessDto;
 import eu.proximagroup.accounts.entities.Customer;
 import eu.proximagroup.accounts.services.CustomerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
+@Tag(
+		name = "Controller API for Customers",
+		description = "CRUD OPERATION"
+		)
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerController {
@@ -88,6 +98,24 @@ public class CustomerController {
 		
 	}
 	
+	
+	@Operation(
+			summary = "Create Customer REST API",
+			description = "REST API tocreate new customer"
+			)
+	@ApiResponses({
+		@ApiResponse(
+				responseCode = "201",
+				description = "HTTP Status CREATED"
+				),
+		@ApiResponse(
+				responseCode = "400",
+				description = "HTTP Status BAD REQUEST",
+				content = @Content(
+						schema = @Schema(implementation = ResponseErrorDto.class)
+						)
+				)
+	})
 	@PostMapping
 	public ResponseEntity<?> store(@Valid @RequestBody Customer customer, BindingResult result, HttpServletRequest request)
 	{
