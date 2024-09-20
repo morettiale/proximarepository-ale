@@ -1,0 +1,26 @@
+services:
+  accounts:
+    container_name: accounts-ms
+    image: "microservices-01/accounts:v1"
+    ports:
+      - "8080:8080"
+    networks:
+      - proximagroup
+ 
+  cards:
+    container_name: cards-ms
+    image: "microservices-01/cards:v1"
+    ports:
+      - "9000:9000"
+    networks:
+      - proximagroup
+  loans:
+    container_name: loans-ms
+    image: "microservices-01/loans:v1"
+    ports:
+      - "8090:8090"
+    networks:
+      - proximagroup
+networks:
+  proximagroup:
+   driver: "bridge"
