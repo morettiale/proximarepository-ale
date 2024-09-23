@@ -1,5 +1,15 @@
 server:
-    port: 8090
-spring: 
- application:
-  name: loans
+  port: 8090
+spring:
+  application:
+    name: loans
+  config:
+    import:
+      - "application-qa.yml"
+      - "application-prod.yml"
+  profiles:
+    active:
+      - "default"
+build:
+  version: 1.0
+ambiente: "dev"
