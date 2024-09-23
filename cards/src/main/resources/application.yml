@@ -1,5 +1,15 @@
 server:
-    port: 9000
-spring: 
- application:
-  name: cards
+  port: 9000
+spring:
+  application:
+    name: cards
+  config:
+    import:
+      - "application-qa.yml"
+      - "application-prod.yml"
+  profiles:
+    active:
+      - "default"
+build:
+  version: 1.0
+ambiente: "dev"
