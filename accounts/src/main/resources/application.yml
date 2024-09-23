@@ -13,3 +13,13 @@ spring:
       ddl-auto: update
     defer-datasource-initialization: true
     show-sql: true
+  config:
+    import:
+      - "application-qa.yml"
+      - "application-prod.yml"
+  profiles:
+    active:
+      - "default"
+build:
+  version: 1.0
+ambiente: "dev"
