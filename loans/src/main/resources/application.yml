@@ -2,14 +2,10 @@ server:
   port: 8090
 spring:
   application:
-    name: loans
+    name: "loans"
   config:
     import:
-      - "application-qa.yml"
-      - "application-prod.yml"
+      - "configserver:http://localhost:8071/"
   profiles:
     active:
-      - "default"
-build:
-  version: 1.0
-ambiente: "dev"
+    - "default"
