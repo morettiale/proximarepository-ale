@@ -38,4 +38,5 @@ public class Account extends BaseEntity {
     @JsonBackReference
     @JoinColumn(nullable = false)
     private Customer customer;
+    
 }

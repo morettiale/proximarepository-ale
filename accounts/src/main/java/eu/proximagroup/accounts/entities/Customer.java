@@ -25,7 +25,7 @@ import lombok.Setter;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 @Entity
 @Table(name = "customers")
-public class Customer extends BaseEntity {
+public class Customer extends BaseEntity{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
