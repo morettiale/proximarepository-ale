@@ -1,0 +1,15 @@
+# RECUPERO IMMAGINE JDK DA DOCKER HUB
+FROM openjdk:17-jdk-slim
+
+#ACCETTIAMO COMANDI DELLA LIBRERIA DI LINUX
+RUN apt-get -y update; apt-get -y install curl
+
+#OPZIONALE
+#SERVE SE VOLETE CARICARE QUESTA IMMAGINE (JDK+configserver) SU DOCKER HUB
+LABEL "org.opencontainers.image.authors"="eu.proximagroup"
+
+#AGGIUNGO IL JAR DI ACCOUNTS ALLA MIA IMMAGINE
+COPY target/configserver-0.0.1-SNAPSHOT.jar configserver-0.0.1-SNAPSHOT.jar
+
+#COMANDO DA ESEGUIRE APPENA IL CONTAINER PARTE (TRA LE QUADRE CI SONO GLI ELEMENTI)
+ENTRYPOINT ["java","-jar","configserver-0.0.1-SNAPSHOT.jar"]
