@@ -7,77 +7,53 @@ services:
       - "15672:15672"
     healthcheck:
       test: rabbitmq-diagnostics check_port_connectivity
-      interval: ${INTERVAL}
-      timeout: ${TIMEOUT}
-      retries: ${RETRIES}
-      start_period: ${PERIOD}
-    networks:
-      - ${NETWORKS}
+    extends:
+      file: "common-config.yml"
+      service: rabbit-service
 
   configserver:
     container_name: configserver-ms
     image: "microservices-01/configserver:v3"
     ports:
       - "8071:8071"
-    networks:
-      - ${NETWORKS}
-    depends_on:
-      rabbit:
-        condition: service_healthy
+    extends:
+      file: "common-config.yml"
+      service: configserver-service
     healthcheck:
       test:	"curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
-      interval: ${INTERVAL}
-      timeout: ${TIMEOUT}
-      retries: ${RETRIES}
-      start_period: ${PERIOD} 
 
   accounts:
     container_name: accounts-ms
     image: "microservices-01/accounts:v3"
     ports:
       - "8080:8080"
-    networks:
-      - ${NETWORKS}
-    depends_on:
-      configserver:
-        condition: service_healthy
+    extends:
+      file: "common-config.yml"
+      service: base-service
     environment:
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
       SPRING_APPLICATION_NAME: "accounts"
-      SPRING_RABBITMQ_HOST: "${RABBIT}"
-      SPRING_PROFILES_ACTIVE: "${PROFILES}"
  
   cards:
     container_name: cards-ms
     image: "microservices-01/cards:v3"
     ports:
       - "9000:9000"
-    networks:
-      - ${NETWORKS}
-    depends_on:
-      configserver:
-        condition: service_healthy
+    extends:
+      file: "common-config.yml"
+      service: base-service
     environment:
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
       SPRING_APPLICATION_NAME: "cards"
-      SPRING_RABBITMQ_HOST: "${RABBIT}"
-      SPRING_PROFILES_ACTIVE: "${PROFILES}"
 
   loans:
     container_name: loans-ms
     image: "microservices-01/loans:v3"
     ports:
       - "8090:8090"
-    networks:
-      - ${NETWORKS}
-    depends_on:
-      configserver:
-        condition: service_healthy
+    extends:
+      file: "common-config.yml"
+      service: base-service
     environment:
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
       SPRING_APPLICATION_NAME: "loans"
-      SPRING_RABBITMQ_HOST: "${RABBIT}"
-      SPRING_PROFILES_ACTIVE: "${PROFILES}"
 
 networks:
   proximagroup:
