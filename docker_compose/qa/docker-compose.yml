@@ -1,0 +1,61 @@
+services:
+  rabbit:
+    image: rabbitmq:3.13-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+    extends:
+      file: "common-config.yml"
+      service: rabbit-service
+
+  configserver:
+    container_name: configserver-ms
+    image: "microservices-01/configserver:v3"
+    ports:
+      - "8071:8071"
+    extends:
+      file: "common-config.yml"
+      service: configserver-service
+    healthcheck:
+      test:	"curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+
+  accounts:
+    container_name: accounts-ms
+    image: "microservices-01/accounts:v3"
+    ports:
+      - "8080:8080"
+    extends:
+      file: "common-config.yml"
+      service: base-service
+    environment:
+      SPRING_APPLICATION_NAME: "accounts"
+ 
+  cards:
+    container_name: cards-ms
+    image: "microservices-01/cards:v3"
+    ports:
+      - "9000:9000"
+    extends:
+      file: "common-config.yml"
+      service: base-service
+    environment:
+      SPRING_APPLICATION_NAME: "cards"
+
+  loans:
+    container_name: loans-ms
+    image: "microservices-01/loans:v3"
+    ports:
+      - "8090:8090"
+    extends:
+      file: "common-config.yml"
+      service: base-service
+    environment:
+      SPRING_APPLICATION_NAME: "loans"
+
+networks:
+  proximagroup:
+   driver: "bridge"
+   name: "microservices-01"

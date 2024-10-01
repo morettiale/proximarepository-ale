@@ -1,0 +1,36 @@
+services:
+  network-service:
+    networks:
+      - proximagroup
+
+  base-service:
+    extends:
+      service: network-service
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+    depends_on:
+      configserver:
+        condition: service_healthy
+
+  rabbit-service:
+    extends:
+     service: network-service
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  configserver-service:
+    extends:
+      service: network-service
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    depends_on:
+      rabbit:
+        condition: service_healthy
