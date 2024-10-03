@@ -1,61 +1,140 @@
 services:
-  rabbit:
-    image: rabbitmq:3.13-management
-    hostname: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-    extends:
-      file: "common-config.yml"
-      service: rabbit-service
+   accountsdb:
+      image: mysql:8.4.2
+      container_name: accountsdb
+      ports:
+      - 3316:3306
+      extends:
+        file: common-config.yml
+        service: network-service
+      environment:
+         MYSQL_ROOT_PASSWORD: "root"
+         MYSQL_DATABASE: accountsdb
+      volumes:
+      - "..\\..\\db_data\\accounts:\\var\\lib\\mysql\\"
+      healthcheck:
+         test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+         timeout: 10s
+         retries: 10
+         interval: 10s
+         start_period: 10s
 
-  configserver:
-    container_name: configserver-ms
-    image: "microservices-01/configserver:v3"
-    ports:
-      - "8071:8071"
-    extends:
-      file: "common-config.yml"
-      service: configserver-service
-    healthcheck:
-      test:	"curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+   cardsdb:
+      image: mysql:8.4.2
+      container_name: cardsdb
+      ports:
+      - 3317:3306
+      extends:
+        file: common-config.yml
+        service: network-service
+      environment:
+         MYSQL_ROOT_PASSWORD: "root"
+         MYSQL_DATABASE: cardsdb
+      volumes:
+      - "..\\..\\db_data\\cards:\\var\\lib\\mysql\\"
+      healthcheck:
+         test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+         timeout: 10s
+         retries: 10
+         interval: 10s
+         start_period: 10s
+  
+   loansdb:
+      image: mysql:8.4.2
+      container_name: loansdb
+      ports:
+      - 3318:3306
+      extends:
+        file: common-config.yml
+        service: network-service
+      environment:
+         MYSQL_ROOT_PASSWORD: "root"
+         MYSQL_DATABASE: loansdb
+      volumes:
+      - "..\\..\\db_data\\loans:\\var\\lib\\mysql\\"
+      healthcheck:
+         test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+         timeout: 10s
+         retries: 10
+         interval: 10s
+         start_period: 10s
 
-  accounts:
-    container_name: accounts-ms
-    image: "microservices-01/accounts:v3"
-    ports:
-      - "8080:8080"
-    extends:
-      file: "common-config.yml"
-      service: base-service
-    environment:
-      SPRING_APPLICATION_NAME: "accounts"
- 
-  cards:
-    container_name: cards-ms
-    image: "microservices-01/cards:v3"
-    ports:
-      - "9000:9000"
-    extends:
-      file: "common-config.yml"
-      service: base-service
-    environment:
-      SPRING_APPLICATION_NAME: "cards"
+   rabbit:
+      image: rabbitmq:3.13-management
+      hostname: rabbitmq
+      ports:
+      - 5672:5672
+      - 15672:15672
+      healthcheck:
+         test: rabbitmq-diagnostics check_port_connectivity
+      extends:
+         file: common-config.yml
+         service: rabbit-service
 
-  loans:
-    container_name: loans-ms
-    image: "microservices-01/loans:v3"
-    ports:
-      - "8090:8090"
-    extends:
-      file: "common-config.yml"
-      service: base-service
-    environment:
-      SPRING_APPLICATION_NAME: "loans"
+   configserver:
+      container_name: configserver-ms
+      image: microservices-01/configserver:v3
+      build:
+         context: "..\\..\\configserver\\"
+      ports:
+      - 8071:8071
+      extends:
+         file: common-config.yml
+         service: configserver-service
+      healthcheck:
+         test: curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1
 
+   accounts:
+      container_name: accounts-ms
+      image: microservices-01/accounts:v3
+      build:
+         context: "..\\..\\accounts\\"
+      ports:
+      - 8080:8080
+      extends:
+         file: common-config.yml
+         service: base-service
+      environment:
+         SPRING_APPLICATION_NAME: accounts
+         SPRING_DATASOURCE_URL: jdbc:mysql://accountsdb:3306/accountsdb
+      depends_on:
+         accountsdb:
+            condition: service_healthy
+
+   cards:
+      container_name: cards-ms
+      image: microservices-01/cards:v3
+      build:
+         context: "..\\..\\cards\\"
+      ports:
+      - 9000:9000
+      extends:
+         file: common-config.yml
+         service: base-service
+      environment:
+         SPRING_APPLICATION_NAME: cards
+         SPRING_DATASOURCE_URL: jdbc:mysql://cardsdb:3306/cardsdb
+      depends_on:
+         cardsdb:
+            condition: service_healthy
+
+   loans:
+      container_name: loans-ms
+      image: microservices-01/loans:v3
+      build:
+         context: "..\\..\\loans\\"
+      ports:
+      - 8090:8090
+      extends:
+         file: common-config.yml
+         service: base-service
+      environment:
+         SPRING_APPLICATION_NAME: loans
+         SPRING_DATASOURCE_URL: jdbc:mysql://loansdb:3306/loansdb
+      depends_on:
+         loansdb:
+            condition: service_healthy
 networks:
-  proximagroup:
-   driver: "bridge"
-   name: "microservices-01"
+   proximagroup:
+      driver: bridge
+      name: microservices-01
