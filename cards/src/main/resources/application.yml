@@ -3,6 +3,15 @@ server:
 spring:
   application:
     name: "cards"
+  datasource:
+#    url: jdbc:h2:mem:test
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password: ''
+     url: jdbc:mysql://localhost:3317/cardsdb
+     driver-class-name: com.mysql.cj.jdbc.Driver
+     username: root
+     password: root
   config:
     import:
       - "optional:configserver:http://localhost:8071/"
@@ -11,6 +20,13 @@ spring:
     port: 5672
     username: "guest"
     password: "guest"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    
 management:
   endpoints:
     web:
