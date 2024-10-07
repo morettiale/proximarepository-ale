@@ -10,8 +10,9 @@ services:
       SPRING_RABBITMQ_HOST: "rabbit"
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://localhost:8070/eureka/"
     depends_on:
-      configserver:
+      eurekaserver:
         condition: service_healthy
 
   rabbit-service:
@@ -33,4 +34,16 @@ services:
       start_period: 5s
     depends_on:
       rabbit:
+        condition: service_healthy
+        
+  eurekaserver-service:
+    extends:
+      service: network-service
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    depends_on:
+      configserver:
         condition: service_healthy

@@ -1,4 +1,25 @@
 services:
+
+   eurekaserver:
+      container_name: eurekaserver
+      image: microservices-01/eurekaserver:v3
+      ports:
+      - 8070:8070
+      build:
+         context: "..\\..\\eurekaserver\\"
+      extends:
+         file: common-config.yml
+         service: eurekaserver-service
+      healthcheck:
+         test: curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1
+         timeout: 10s
+         retries: 10
+         interval: 10s
+         start_period: 10s
+      environment:
+        SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+        SPRING_APPLICATION_NAME: "eurekaserver"
+      
    accountsdb:
       image: mysql:8.4.2
       container_name: accountsdb
@@ -83,6 +104,10 @@ services:
          service: configserver-service
       healthcheck:
          test: curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1
+         timeout: 10s
+         retries: 10
+         interval: 10s
+         start_period: 10s
 
    accounts:
       container_name: accounts-ms
@@ -97,6 +122,7 @@ services:
       environment:
          SPRING_APPLICATION_NAME: accounts
          SPRING_DATASOURCE_URL: jdbc:mysql://accountsdb:3306/accountsdb
+         EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
       depends_on:
          accountsdb:
             condition: service_healthy
@@ -114,6 +140,7 @@ services:
       environment:
          SPRING_APPLICATION_NAME: cards
          SPRING_DATASOURCE_URL: jdbc:mysql://cardsdb:3306/cardsdb
+         EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
       depends_on:
          cardsdb:
             condition: service_healthy
@@ -131,6 +158,7 @@ services:
       environment:
          SPRING_APPLICATION_NAME: loans
          SPRING_DATASOURCE_URL: jdbc:mysql://loansdb:3306/loansdb
+         EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
       depends_on:
          loansdb:
             condition: service_healthy
